@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>For Natalie</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      overflow: hidden;
+      min-height: 100vh;
+      font-family: Arial, sans-serif;
+      background:
+        radial-gradient(circle at top, rgba(255,255,255,0.55), transparent 35%),
+        linear-gradient(180deg, #ffd6e7 0%, #ffecc7 45%, #dff6d7 100%);
+      position: relative;
+    }
+
+    .message {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      color: #6b3252;
+      z-index: 5;
+      padding: 24px 28px;
+      border-radius: 24px;
+      background: rgba(255,255,255,0.45);
+      backdrop-filter: blur(4px);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+    }
+
+    .message h1 {
+      margin: 0 0 10px;
+      font-size: clamp(2rem, 6vw, 4rem);
+    }
+
+    .message p {
+      margin: 0;
+      font-size: clamp(1rem, 2.3vw, 1.4rem);
+    }
+
+    .flower {
+      position: absolute;
+      font-size: 2rem;
+      animation: sway ease-in-out infinite;
+      user-select: none;
+      pointer-events: none;
+    }
+
+    @keyframes sway {
+      0% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-10px) rotate(5deg); }
+      100% { transform: translateY(0) rotate(0deg); }
+    }
+
+    .mouse {
+      position: absolute;
+      left: -10vw;
+      font-size: 2.5rem;
+      animation: run linear infinite;
+      user-select: none;
+      z-index: 4;
+    }
+
+    @keyframes run {
+      from { left: -10vw; }
+      to { left: 110vw; }
+    }
+
+    .heart {
+      position: absolute;
+      bottom: 18px;
+      width: 100%;
+      text-align: center;
+      color: #a84c78;
+      font-size: 1rem;
+      z-index: 5;
+    }
+  </style>
+</head>
+<body>
+  <div class="message">
+    <h1>For Natalie 🌸</h1>
+    <p>Trochu kytiček, trochu myšek a hodně něčeho hezkého pro tebe 💗</p>
+  </div>
+
+  <div class="heart">Made with love 🐭🌷</div>
+
+  <script>
+    const flowers = ['🌸', '🌷', '🌼', '🌹', '🪻'];
+    const mice = ['🐭', '🐁'];
+
+    for (let i = 0; i < 26; i++) {
+      const flower = document.createElement('div');
+      flower.className = 'flower';
+      flower.textContent = flowers[Math.floor(Math.random() * flowers.length)];
+      flower.style.left = Math.random() * 100 + 'vw';
+      flower.style.top = Math.random() * 100 + 'vh';
+      flower.style.animationDuration = (3 + Math.random() * 4) + 's';
+      flower.style.fontSize = (1.5 + Math.random() * 1.5) + 'rem';
+      document.body.appendChild(flower);
+    }
+
+    for (let i = 0; i < 4; i++) {
+      const mouse = document.createElement('div');
+      mouse.className = 'mouse';
+      mouse.textContent = mice[i % mice.length];
+      mouse.style.top = (62 + i * 8) + 'vh';
+      mouse.style.animationDuration = (9 + i * 2) + 's';
+      mouse.style.animationDelay = (-i * 2) + 's';
+      document.body.appendChild(mouse);
+    }
+  </script>
+</body>
+</html>
