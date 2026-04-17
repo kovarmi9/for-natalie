@@ -6,9 +6,16 @@
   <title>For Natalie</title>
   <style>
     * { box-sizing: border-box; }
-    body {
+
+    html, body {
+      width: 100%;
+      height: 100%;
       margin: 0;
       overflow: hidden;
+      touch-action: none;
+    }
+
+    body {
       min-height: 100vh;
       font-family: Arial, sans-serif;
       background:
@@ -24,22 +31,25 @@
       transform: translate(-50%, -50%);
       text-align: center;
       color: #6b3252;
-      z-index: 5;
-      padding: 24px 28px;
+      z-index: 20;
+      padding: 20px 22px;
       border-radius: 24px;
-      background: rgba(255,255,255,0.45);
+      background: rgba(255,255,255,0.5);
       backdrop-filter: blur(4px);
       box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+      width: min(90vw, 520px);
     }
 
     .message h1 {
       margin: 0 0 10px;
-      font-size: clamp(2rem, 6vw, 4rem);
+      font-size: clamp(1.8rem, 6vw, 4rem);
+      line-height: 1.1;
     }
 
     .message p {
       margin: 0;
-      font-size: clamp(1rem, 2.3vw, 1.4rem);
+      font-size: clamp(1rem, 3.2vw, 1.4rem);
+      line-height: 1.35;
     }
 
     .flower {
@@ -47,71 +57,139 @@
       font-size: 2rem;
       animation: sway ease-in-out infinite;
       user-select: none;
-      pointer-events: none;
+      cursor: grab;
+      z-index: 10;
+    }
+
+    .flower:active {
+      cursor: grabbing;
     }
 
     @keyframes sway {
-      0% { transform: translateY(0) rotate(0deg); }
-      50% { transform: translateY(-10px) rotate(5deg); }
-      100% { transform: translateY(0) rotate(0deg); }
+      0% { transform: translateY(0) rotate(0deg) scale(1); }
+      50% { transform: translateY(-10px) rotate(5deg) scale(1.03); }
+      100% { transform: translateY(0) rotate(0deg) scale(1); }
+    }
+
+    .flower.dragging {
+      animation: none;
     }
 
     .mouse {
       position: absolute;
-      left: -10vw;
-      font-size: 2.5rem;
+      left: -12vw;
+      font-size: clamp(1.8rem, 4vw, 2.5rem);
       animation: run linear infinite;
       user-select: none;
-      z-index: 4;
+      z-index: 5;
+      pointer-events: none;
     }
 
     @keyframes run {
-      from { left: -10vw; }
-      to { left: 110vw; }
+      from { left: -12vw; }
+      to   { left: 112vw; }
     }
 
     .heart {
       position: absolute;
-      bottom: 18px;
-      width: 100%;
+      bottom: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: calc(100% - 24px);
       text-align: center;
       color: #a84c78;
-      font-size: 1rem;
-      z-index: 5;
+      font-size: clamp(0.95rem, 3vw, 1.1rem);
+      z-index: 20;
+    }
+
+    @media (max-width: 600px) {
+      .message {
+        padding: 16px 16px;
+        border-radius: 18px;
+      }
     }
   </style>
 </head>
 <body>
   <div class="message">
-    <h1>Pro Natinku🌸</h1>
-    <p>Trochu kytiček, trochu myšek a hodně něčeho hezkého pro tebe 💗</p>
+    <h1>Pro Natinku 🌸</h1>
+    <p>Kytičky pro tebe 🥺🐁💗</p>
   </div>
 
   <div class="heart">Us 🐁🐀❤️</div>
 
   <script>
-    const flowers = ['🌸', '🌷', '🌼', '🌹', '🪻','❤️','💞','🌺','🪷','💐','🐄'];
-    const mice = ['🐭', '🐁', '🐂', '🐮', '🐄', '🐀'];
+    const flowerItems = ['🌸', '🌷', '🌼', '🌹', '🪻', '❤️', '💞', '🌺', '🪷', '💐'];
+    const mice = ['🐭', '🐁', '🐀'];
 
-    for (let i = 0; i < 100; i++) {
+    const flowerCount = window.innerWidth < 700 ? 45 : 100;
+    const mouseCount = window.innerWidth < 700 ? 5 : 10;
+
+    for (let i = 0; i < flowerCount; i++) {
       const flower = document.createElement('div');
       flower.className = 'flower';
-      flower.textContent = flowers[Math.floor(Math.random() * flowers.length)];
-      flower.style.left = Math.random() * 100 + 'vw';
-      flower.style.top = Math.random() * 100 + 'vh';
+      flower.textContent = flowerItems[Math.floor(Math.random() * flowerItems.length)];
+      flower.style.left = Math.random() * 92 + 'vw';
+      flower.style.top = Math.random() * 92 + 'vh';
       flower.style.animationDuration = (3 + Math.random() * 4) + 's';
-      flower.style.fontSize = (1.5 + Math.random() * 1.5) + 'rem';
+      flower.style.fontSize = (1.3 + Math.random() * 1.4) + 'rem';
       document.body.appendChild(flower);
+
+      makeDraggable(flower);
     }
 
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < mouseCount; i++) {
       const mouse = document.createElement('div');
       mouse.className = 'mouse';
       mouse.textContent = mice[i % mice.length];
-      mouse.style.top = (62 + i * 8) + 'vh';
-      mouse.style.animationDuration = (9 + i * 2) + 's';
-      mouse.style.animationDelay = (-i * 2) + 's';
+      mouse.style.top = (55 + Math.random() * 35) + 'vh';
+      mouse.style.animationDuration = (8 + Math.random() * 10) + 's';
+      mouse.style.animationDelay = (-Math.random() * 10) + 's';
       document.body.appendChild(mouse);
+    }
+
+    function makeDraggable(element) {
+      let offsetX = 0;
+      let offsetY = 0;
+      let dragging = false;
+
+      element.addEventListener('pointerdown', (e) => {
+        dragging = true;
+        element.classList.add('dragging');
+
+        const rect = element.getBoundingClientRect();
+        offsetX = e.clientX - rect.left;
+        offsetY = e.clientY - rect.top;
+
+        element.setPointerCapture(e.pointerId);
+      });
+
+      element.addEventListener('pointermove', (e) => {
+        if (!dragging) return;
+
+        let x = e.clientX - offsetX;
+        let y = e.clientY - offsetY;
+
+        const maxX = window.innerWidth - element.offsetWidth;
+        const maxY = window.innerHeight - element.offsetHeight;
+
+        x = Math.max(0, Math.min(x, maxX));
+        y = Math.max(0, Math.min(y, maxY));
+
+        element.style.left = x + 'px';
+        element.style.top = y + 'px';
+      });
+
+      element.addEventListener('pointerup', (e) => {
+        dragging = false;
+        element.classList.remove('dragging');
+        element.releasePointerCapture(e.pointerId);
+      });
+
+      element.addEventListener('pointercancel', (e) => {
+        dragging = false;
+        element.classList.remove('dragging');
+      });
     }
   </script>
 </body>
