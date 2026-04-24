@@ -1,196 +1,202 @@
 <!DOCTYPE html>
 <html lang="cs">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>For Natalie</title>
-  <style>
-    * { box-sizing: border-box; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For Natalie</title>
 
-    html, body {
-      width: 100%;
-      height: 100%;
-      margin: 0;
-      overflow: hidden;
-      touch-action: none;
-    }
+<style>
+/* ===== ZÁKLAD ===== */
+* { box-sizing: border-box; }
 
-    body {
-      min-height: 100vh;
-      font-family: Arial, sans-serif;
-      background:
-        radial-gradient(circle at top, rgba(255,255,255,0.55), transparent 35%),
-        linear-gradient(180deg, #ffd6e7 0%, #ffecc7 45%, #dff6d7 100%);
-      position: relative;
-    }
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  touch-action: none; /* lepší ovládání na mobilu */
+}
 
-    .message {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      text-align: center;
-      color: #6b3252;
-      z-index: 20;
-      padding: 20px 22px;
-      border-radius: 24px;
-      background: rgba(255,255,255,0.5);
-      backdrop-filter: blur(4px);
-      box-shadow: 0 8px 30px rgba(0,0,0,0.08);
-      width: min(90vw, 520px);
-    }
+body {
+  font-family: Arial, sans-serif;
+  position: relative;
 
-    .message h1 {
-      margin: 0 0 10px;
-      font-size: clamp(1.8rem, 6vw, 4rem);
-      line-height: 1.1;
-    }
+  /* pozadí */
+  background:
+    radial-gradient(circle at top, rgba(255,255,255,0.55), transparent 35%),
+    linear-gradient(180deg, #ffd6e7, #ffecc7 45%, #dff6d7);
+}
 
-    .message p {
-      margin: 0;
-      font-size: clamp(1rem, 3.2vw, 1.4rem);
-      line-height: 1.35;
-    }
+/* ===== TEXT UPROSTŘED ===== */
+.message {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
 
-    .flower {
-      position: absolute;
-      font-size: 2rem;
-      animation: sway ease-in-out infinite;
-      user-select: none;
-      cursor: grab;
-      z-index: 10;
-    }
+  z-index: 20;
+  padding: 20px;
+  border-radius: 20px;
 
-    .flower:active {
-      cursor: grabbing;
-    }
+  background: rgba(255,255,255,0.5);
+}
 
-    @keyframes sway {
-      0% { transform: translateY(0) rotate(0deg) scale(1); }
-      50% { transform: translateY(-10px) rotate(5deg) scale(1.03); }
-      100% { transform: translateY(0) rotate(0deg) scale(1); }
-    }
+/* ===== KYTIČKY ===== */
+.flower {
+  position: absolute;
+  font-size: 2rem;
+  animation: sway 4s ease-in-out infinite;
 
-    .flower.dragging {
-      animation: none;
-    }
+  cursor: grab;
+  z-index: 10;
+}
 
-    .mouse {
-      position: absolute;
-      left: -12vw;
-      font-size: clamp(1.8rem, 4vw, 2.5rem);
-      animation: run linear infinite;
-      user-select: none;
-      z-index: 5;
-      pointer-events: none;
-    }
+.flower.dragging {
+  animation: none; /* při tažení se nehýbe */
+}
 
-    @keyframes run {
-      from { left: -12vw; }
-      to   { left: 112vw; }
-    }
+@keyframes sway {
+  0%   { transform: translateY(0); }
+  50%  { transform: translateY(-10px) rotate(5deg); }
+  100% { transform: translateY(0); }
+}
 
-    .heart {
-      position: absolute;
-      bottom: 14px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: calc(100% - 24px);
-      text-align: center;
-      color: #a84c78;
-      font-size: clamp(0.95rem, 3vw, 1.1rem);
-      z-index: 20;
-    }
+/* ===== ZVÍŘÁTKA (MYŠI + KRÁVY) ===== */
+.mouse {
+  position: absolute;
 
-    @media (max-width: 600px) {
-      .message {
-        padding: 16px 16px;
-        border-radius: 18px;
-      }
-    }
-  </style>
+  right: -12vw; /* začínají vpravo (nové!) */
+  font-size: 2rem;
+
+  animation: run linear infinite;
+  pointer-events: none;
+}
+
+/* pohyb ZPRAVA DOLEVA */
+@keyframes run {
+  from { right: -12vw; }
+  to   { right: 112vw; }
+}
+
+/* ===== SPODNÍ TEXT ===== */
+.heart {
+  position: absolute;
+  bottom: 10px;
+  width: 100%;
+  text-align: center;
+}
+</style>
 </head>
+
 <body>
-  <div class="message">
-    <h1>Pro Natinku 🌸</h1>
-    <p>Kytičky pro tebe 🥺🐁💗</p>
-  </div>
 
-  <div class="heart">Us 🐁🐀❤️</div>
+<div class="message">
+  <h1>Pro Natinku 🌸</h1>
+  <p>Kytičky pro tebe 🥺🐁💗</p>
+</div>
 
-  <script>
-    const flowerItems = ['🌸', '🌷', '🌼', '🌹', '🪻', '❤️', '💞', '🌺', '🪷', '💐'];
-    const mice = ['🐭', '🐁', '🐀', '🐂', '🐄', '🐮'];
+<div class="heart">Us 🐁🐀❤️</div>
 
-    const flowerCount = window.innerWidth < 700 ? 45 : 100;
-    const mouseCount = window.innerWidth < 700 ? 5 : 10;
+<script>
+/* ===== DATA ===== */
 
-    for (let i = 0; i < flowerCount; i++) {
-      const flower = document.createElement('div');
-      flower.className = 'flower';
-      flower.textContent = flowerItems[Math.floor(Math.random() * flowerItems.length)];
-      flower.style.left = Math.random() * 92 + 'vw';
-      flower.style.top = Math.random() * 92 + 'vh';
-      flower.style.animationDuration = (3 + Math.random() * 4) + 's';
-      flower.style.fontSize = (1.3 + Math.random() * 1.4) + 'rem';
-      document.body.appendChild(flower);
+// co se může generovat
+const flowers = ['🌸','🌷','🌼','🌹','🪻','❤️','💞','🌺','🪷','💐'];
+const animals = ['🐭','🐁','🐀','🐂','🐄','🐮'];
 
-      makeDraggable(flower);
-    }
+// méně objektů na mobilu
+const flowerCount = window.innerWidth < 700 ? 45 : 100;
+const animalCount = window.innerWidth < 700 ? 5 : 10;
 
-    for (let i = 0; i < mouseCount; i++) {
-      const mouse = document.createElement('div');
-      mouse.className = 'mouse';
-      mouse.textContent = mice[i % mice.length];
-      mouse.style.top = (55 + Math.random() * 35) + 'vh';
-      mouse.style.animationDuration = (8 + Math.random() * 10) + 's';
-      mouse.style.animationDelay = (-Math.random() * 10) + 's';
-      document.body.appendChild(mouse);
-    }
 
-    function makeDraggable(element) {
-      let offsetX = 0;
-      let offsetY = 0;
-      let dragging = false;
+/* ===== KYTIČKY ===== */
+for (let i = 0; i < flowerCount; i++) {
 
-      element.addEventListener('pointerdown', (e) => {
-        dragging = true;
-        element.classList.add('dragging');
+  const f = document.createElement('div');
+  f.className = 'flower';
 
-        const rect = element.getBoundingClientRect();
-        offsetX = e.clientX - rect.left;
-        offsetY = e.clientY - rect.top;
+  // náhodný obsah
+  f.textContent = flowers[Math.floor(Math.random() * flowers.length)];
 
-        element.setPointerCapture(e.pointerId);
-      });
+  // náhodná pozice
+  f.style.left = Math.random() * 92 + 'vw';
+  f.style.top  = Math.random() * 92 + 'vh';
 
-      element.addEventListener('pointermove', (e) => {
-        if (!dragging) return;
+  // náhodná velikost a rychlost
+  f.style.fontSize = (1.3 + Math.random() * 1.4) + 'rem';
+  f.style.animationDuration = (3 + Math.random() * 4) + 's';
 
-        let x = e.clientX - offsetX;
-        let y = e.clientY - offsetY;
+  document.body.appendChild(f);
 
-        const maxX = window.innerWidth - element.offsetWidth;
-        const maxY = window.innerHeight - element.offsetHeight;
+  makeDraggable(f); // umožní tahání
+}
 
-        x = Math.max(0, Math.min(x, maxX));
-        y = Math.max(0, Math.min(y, maxY));
 
-        element.style.left = x + 'px';
-        element.style.top = y + 'px';
-      });
+/* ===== ZVÍŘÁTKA ===== */
+for (let i = 0; i < animalCount; i++) {
 
-      element.addEventListener('pointerup', (e) => {
-        dragging = false;
-        element.classList.remove('dragging');
-        element.releasePointerCapture(e.pointerId);
-      });
+  const a = document.createElement('div');
+  a.className = 'mouse';
 
-      element.addEventListener('pointercancel', (e) => {
-        dragging = false;
-        element.classList.remove('dragging');
-      });
-    }
-  </script>
+  // střídání emoji
+  a.textContent = animals[i % animals.length];
+
+  // výška (aby nebyly přes sebe)
+  a.style.top = (55 + Math.random() * 35) + 'vh';
+
+  // rychlost + náhodný start
+  a.style.animationDuration = (8 + Math.random() * 10) + 's';
+  a.style.animationDelay = (-Math.random() * 10) + 's';
+
+  document.body.appendChild(a);
+}
+
+
+/* ===== DRAG & DROP (TAHÁNÍ KYTIČEK) ===== */
+function makeDraggable(el) {
+
+  let offsetX, offsetY, dragging = false;
+
+  el.addEventListener('pointerdown', (e) => {
+    dragging = true;
+    el.classList.add('dragging');
+
+    const rect = el.getBoundingClientRect();
+
+    // kde jsi kliknul uvnitř objektu
+    offsetX = e.clientX - rect.left;
+    offsetY = e.clientY - rect.top;
+
+    el.setPointerCapture(e.pointerId);
+  });
+
+  el.addEventListener('pointermove', (e) => {
+    if (!dragging) return;
+
+    let x = e.clientX - offsetX;
+    let y = e.clientY - offsetY;
+
+    // omezení aby to neuteklo mimo obrazovku
+    x = Math.max(0, Math.min(x, window.innerWidth - el.offsetWidth));
+    y = Math.max(0, Math.min(y, window.innerHeight - el.offsetHeight));
+
+    el.style.left = x + 'px';
+    el.style.top  = y + 'px';
+  });
+
+  el.addEventListener('pointerup', (e) => {
+    dragging = false;
+    el.classList.remove('dragging');
+    el.releasePointerCapture(e.pointerId);
+  });
+
+  el.addEventListener('pointercancel', () => {
+    dragging = false;
+    el.classList.remove('dragging');
+  });
+}
+</script>
+
 </body>
 </html>
