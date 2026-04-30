@@ -71,7 +71,6 @@ body {
 .tree {
   position: absolute;
   bottom: clamp(35px, 7vh, 80px);
-  font-size: 3rem;
   text-align: center;
   z-index: 2;
   pointer-events: auto;
@@ -119,18 +118,15 @@ body {
   opacity: 0;
 }
 
-/* levá 🐁 (otočená doprava) */
 .kiss-mouse-left {
   left: -1em;
   transform: scaleX(-1);
 }
 
-/* pravá 🐀 (NEotáčet!) */
 .kiss-mouse-right {
   right: -1em;
 }
 
-/* ANIMACE */
 .tree.kissing .kiss-mouse-left {
   animation: mouseLeftKiss 1.2s ease forwards;
 }
@@ -190,6 +186,30 @@ body {
   text-align: center;
   z-index: 20;
 }
+
+@media (max-width: 700px) {
+  .message {
+    width: 86vw;
+    padding: 14px;
+  }
+
+  .message h1 {
+    font-size: 1.35rem;
+  }
+
+  .message p {
+    font-size: 1rem;
+  }
+
+  .tree {
+    bottom: 58px;
+  }
+
+  .kiss-scene {
+    width: 2.1em;
+    bottom: -0.5em;
+  }
+}
 </style>
 </head>
 
@@ -206,8 +226,10 @@ body {
 const flowers = ['🌸','🌷','🌼','🌹','🪻','❤️','💞','🌺','🪷','💐','🍒','🩷','💓','💗','💕','💖'];
 const animals = ['🐭','🐁','🐀','🐂','🐄','🐮','🐦'];
 
-const flowerCount = window.innerWidth < 700 ? 45 : 100;
-const animalCount = window.innerWidth < 700 ? 5 : 10;
+const isMobile = window.innerWidth < 700;
+
+const flowerCount = isMobile ? 45 : 100;
+const animalCount = isMobile ? 5 : 10;
 
 /* KYTIČKY */
 for (let i = 0; i < flowerCount; i++) {
@@ -238,9 +260,9 @@ for (let i = 0; i < animalCount; i++) {
 }
 
 /* STROMY */
-const treeCount = window.innerWidth < 700 ? 2 : 4;
+const treePositions = isMobile ? [18, 68] : [8, 34, 60, 84];
 
-for (let i = 0; i < treeCount; i++) {
+for (let i = 0; i < treePositions.length; i++) {
   const t = document.createElement('div');
   t.className = 'tree';
 
@@ -253,8 +275,10 @@ for (let i = 0; i < treeCount; i++) {
     </div>
   `;
 
-  t.style.left = (8 + i * (80 / (treeCount - 1))) + "vw";
-  t.style.fontSize = (4 + Math.random() * 2.5) + "rem";
+  t.style.left = treePositions[i] + "vw";
+  t.style.fontSize = isMobile
+    ? (3.5 + Math.random() * 0.6) + "rem"
+    : (4 + Math.random() * 2.5) + "rem";
 
   document.body.appendChild(t);
 
@@ -264,7 +288,7 @@ for (let i = 0; i < treeCount; i++) {
     t.classList.add('kissing');
   });
 
-  const blossomCount = window.innerWidth < 700 ? 5 : 9;
+  const blossomCount = isMobile ? 6 : 9;
 
   for (let j = 0; j < blossomCount; j++) {
     const b = document.createElement('span');
@@ -273,7 +297,7 @@ for (let i = 0; i < treeCount; i++) {
 
     b.style.left = (30 + (Math.random() - 0.5) * (Math.random() * 100)) + "%";
     b.style.top = (-5 + Math.random() * 50) + "%";
-    b.style.animationDelay = (Math.random()) + "s";
+    b.style.animationDelay = Math.random() + "s";
     b.style.animationDuration = (2 + Math.random() * 3) + "s";
     b.style.fontSize = (0.15 + Math.random() * 0.5) + "em";
 
