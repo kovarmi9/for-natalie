@@ -3,10 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>For Natalie</title>
+<title>První máj pro Natinku</title>
 
 <style>
-/* ===== ZÁKLAD ===== */
 * { box-sizing: border-box; }
 
 html, body {
@@ -14,46 +13,39 @@ html, body {
   height: 100%;
   margin: 0;
   overflow: hidden;
-  touch-action: none; /* lepší ovládání na mobilu */
+  touch-action: none;
 }
 
 body {
   font-family: Arial, sans-serif;
   position: relative;
-
-  /* pozadí */
   background:
     radial-gradient(circle at top, rgba(255,255,255,0.55), transparent 35%),
     linear-gradient(180deg, #ffd6e7, #ffecc7 45%, #dff6d7);
 }
 
-/* ===== TEXT UPROSTŘED ===== */
 .message {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   text-align: center;
-
   z-index: 20;
   padding: 20px;
   border-radius: 20px;
-
   background: rgba(255,255,255,0.5);
 }
 
-/* ===== KYTIČKY ===== */
 .flower {
   position: absolute;
   font-size: 2rem;
   animation: sway 4s ease-in-out infinite;
-
   cursor: grab;
   z-index: 10;
 }
 
 .flower.dragging {
-  animation: none; /* při tažení se nehýbe */
+  animation: none;
 }
 
 @keyframes sway {
@@ -62,29 +54,141 @@ body {
   100% { transform: translateY(0); }
 }
 
-/* ===== ZVÍŘÁTKA (MYŠI + KRÁVY) ===== */
 .mouse {
   position: absolute;
-
-  right: -12vw; /* začínají vpravo (nové!) */
+  right: -12vw;
   font-size: 2rem;
-
   animation: run linear infinite;
   pointer-events: none;
+  z-index: 4;
 }
 
-/* pohyb ZPRAVA DOLEVA */
 @keyframes run {
   from { right: -12vw; }
   to   { right: 112vw; }
 }
 
-/* ===== SPODNÍ TEXT ===== */
+.tree {
+  position: absolute;
+  bottom: clamp(35px, 7vh, 80px);
+  font-size: 3rem;
+  text-align: center;
+  z-index: 2;
+  pointer-events: auto;
+  cursor: pointer;
+  width: 1em;
+  height: 1em;
+}
+
+.tree-blossom {
+  position: absolute;
+  opacity: 0;
+  transform: scale(0.3);
+  animation: blossom 3s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes blossom {
+  0%   { opacity: 0; transform: scale(0.3) rotate(0deg); }
+  25%  { opacity: 1; transform: scale(1) rotate(8deg); }
+  65%  { opacity: 1; transform: scale(1.05) rotate(-5deg); }
+  100% { opacity: 0; transform: scale(0.2) rotate(15deg); }
+}
+
+/* ===== PUSINKA ===== */
+
+.kiss-scene {
+  position: absolute;
+  left: 50%;
+  bottom: -0.42em;
+  transform: translateX(-50%);
+  width: 2.4em;
+  height: 1.2em;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.tree.kissing .kiss-scene {
+  opacity: 1;
+}
+
+.kiss-mouse {
+  position: absolute;
+  bottom: 0;
+  font-size: 0.45em;
+  opacity: 0;
+}
+
+/* levá 🐁 (otočená doprava) */
+.kiss-mouse-left {
+  left: -1em;
+  transform: scaleX(-1);
+}
+
+/* pravá 🐀 (NEotáčet!) */
+.kiss-mouse-right {
+  right: -1em;
+}
+
+/* ANIMACE */
+.tree.kissing .kiss-mouse-left {
+  animation: mouseLeftKiss 1.2s ease forwards;
+}
+
+.tree.kissing .kiss-mouse-right {
+  animation: mouseRightKiss 1.2s ease forwards;
+}
+
+@keyframes mouseLeftKiss {
+  from {
+    left: -1em;
+    opacity: 0;
+    transform: scaleX(-1);
+  }
+  to {
+    left: 1.25em;
+    opacity: 1;
+    transform: scaleX(-1);
+  }
+}
+
+@keyframes mouseRightKiss {
+  from {
+    right: -1em;
+    opacity: 0;
+  }
+  to {
+    right: 1.25em;
+    opacity: 1;
+  }
+}
+
+.kiss-emoji {
+  position: absolute;
+  left: 50%;
+  bottom: 0.38em;
+  transform: translateX(-50%) scale(0);
+  font-size: 0.38em;
+  opacity: 0;
+}
+
+.tree.kissing .kiss-emoji {
+  animation: kissPop 1.4s ease 0.8s forwards;
+}
+
+@keyframes kissPop {
+  0%   { opacity: 0; transform: translateX(-50%) scale(0); }
+  40%  { opacity: 1; transform: translateX(-50%) scale(1.6); }
+  70%  { opacity: 1; transform: translateX(-50%) scale(1); }
+  100% { opacity: 1; transform: translateX(-50%) scale(1.15); }
+}
+
 .heart {
   position: absolute;
   bottom: 10px;
   width: 100%;
   text-align: center;
+  z-index: 20;
 }
 </style>
 </head>
@@ -92,70 +196,93 @@ body {
 <body>
 
 <div class="message">
-  <h1>Pro Natinku 🌸</h1>
+  <h1>Přeju krásný první máj, Natinko 🌸🌸🌸</h1>
   <p>Kytičky pro tebe 🥺🐁💗</p>
 </div>
 
 <div class="heart">Us 🐁🐀❤️</div>
 
 <script>
-/* ===== DATA ===== */
+const flowers = ['🌸','🌷','🌼','🌹','🪻','❤️','💞','🌺','🪷','💐','🍒','🩷','💓','💗','💕','💖'];
+const animals = ['🐭','🐁','🐀','🐂','🐄','🐮','🐦'];
 
-// co se může generovat
-const flowers = ['🌸','🌷','🌼','🌹','🪻','❤️','💞','🌺','🪷','💐'];
-const animals = ['🐭','🐁','🐀','🐂','🐄','🐮'];
-
-// méně objektů na mobilu
 const flowerCount = window.innerWidth < 700 ? 45 : 100;
 const animalCount = window.innerWidth < 700 ? 5 : 10;
 
-
-/* ===== KYTIČKY ===== */
+/* KYTIČKY */
 for (let i = 0; i < flowerCount; i++) {
-
   const f = document.createElement('div');
   f.className = 'flower';
-
-  // náhodný obsah
   f.textContent = flowers[Math.floor(Math.random() * flowers.length)];
 
-  // náhodná pozice
   f.style.left = Math.random() * 92 + 'vw';
   f.style.top  = Math.random() * 92 + 'vh';
-
-  // náhodná velikost a rychlost
   f.style.fontSize = (1.3 + Math.random() * 1.4) + 'rem';
   f.style.animationDuration = (3 + Math.random() * 4) + 's';
 
   document.body.appendChild(f);
-
-  makeDraggable(f); // umožní tahání
+  makeDraggable(f);
 }
 
-
-/* ===== ZVÍŘÁTKA ===== */
+/* ZVÍŘÁTKA */
 for (let i = 0; i < animalCount; i++) {
-
   const a = document.createElement('div');
   a.className = 'mouse';
-
-  // střídání emoji
   a.textContent = animals[i % animals.length];
 
-  // výška (aby nebyly přes sebe)
   a.style.top = (55 + Math.random() * 35) + 'vh';
-
-  // rychlost + náhodný start
   a.style.animationDuration = (8 + Math.random() * 10) + 's';
   a.style.animationDelay = (-Math.random() * 10) + 's';
 
   document.body.appendChild(a);
 }
 
+/* STROMY */
+const treeCount = window.innerWidth < 700 ? 2 : 4;
 
-/* ===== DRAG & DROP (TAHÁNÍ KYTIČEK) ===== */
+for (let i = 0; i < treeCount; i++) {
+  const t = document.createElement('div');
+  t.className = 'tree';
+
+  t.innerHTML = `
+    🌳
+    <div class="kiss-scene">
+      <span class="kiss-mouse kiss-mouse-left">🐁</span>
+      <span class="kiss-mouse kiss-mouse-right">🐀</span>
+      <span class="kiss-emoji">💋</span>
+    </div>
+  `;
+
+  t.style.left = (8 + i * (80 / (treeCount - 1))) + "vw";
+  t.style.fontSize = (4 + Math.random() * 2.5) + "rem";
+
+  document.body.appendChild(t);
+
+  t.addEventListener('click', () => {
+    t.classList.remove('kissing');
+    void t.offsetWidth;
+    t.classList.add('kissing');
+  });
+
+  const blossomCount = window.innerWidth < 700 ? 5 : 9;
+
+  for (let j = 0; j < blossomCount; j++) {
+    const b = document.createElement('span');
+    b.className = 'tree-blossom';
+    b.textContent = '🌸';
+
+    b.style.left = (30 + (Math.random() - 0.5) * (Math.random() * 100)) + "%";
+    b.style.top = (-5 + Math.random() * 50) + "%";
+    b.style.animationDelay = (Math.random()) + "s";
+    b.style.animationDuration = (2 + Math.random() * 3) + "s";
+    b.style.fontSize = (0.15 + Math.random() * 0.5) + "em";
+
+    t.appendChild(b);
+  }
+}
+
+/* DRAG */
 function makeDraggable(el) {
-
   let offsetX, offsetY, dragging = false;
 
   el.addEventListener('pointerdown', (e) => {
@@ -163,8 +290,6 @@ function makeDraggable(el) {
     el.classList.add('dragging');
 
     const rect = el.getBoundingClientRect();
-
-    // kde jsi kliknul uvnitř objektu
     offsetX = e.clientX - rect.left;
     offsetY = e.clientY - rect.top;
 
@@ -177,7 +302,6 @@ function makeDraggable(el) {
     let x = e.clientX - offsetX;
     let y = e.clientY - offsetY;
 
-    // omezení aby to neuteklo mimo obrazovku
     x = Math.max(0, Math.min(x, window.innerWidth - el.offsetWidth));
     y = Math.max(0, Math.min(y, window.innerHeight - el.offsetHeight));
 
